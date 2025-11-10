@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">Premium Ice Products</h1>
+                <p class="lead">Discover our wide range of high-quality ice types for all your needs. From crystal-clear cubes to convenient blocks, we have it all.</p>
+                <a href="{{ url_for('shop.ice_list') }}" class="btn btn-light btn-lg">Shop Now</a>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://via.placeholder.com/500x300/ffffff/007bff?text=Ice+Factory" alt="Ice Factory" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="mb-4">Featured Products</h2>
+    <div class="row">
+        {% for ice_type in featured_ice_types %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if ice_type.image_url %}
+                    <img src="{{ ice_type.image_url }}" class="card-img-top" alt="{{ ice_type.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200/007bff/ffffff?text={{ ice_type.name }}" class="card-img-top" alt="{{ ice_type.name }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ ice_type.name }}</h5>
+                    <p class="card-text">{{ ice_type.description[:100] }}...</p>
+                    <p class="card-text"><strong>${{ "%.2f"|format(ice_type.price_per_unit) }} per {{ ice_type.unit }}</strong></p>
+                    <p class="card-text"><small class="text-muted">In Stock: {{ ice_type.in_stock }}</small></p>
+                    <a href="{{ url_for('shop.ice_detail', ice_type_id=ice_type._id) }}" class="btn btn-primary mt-auto">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if ice.image_url %}
+            <img src="{{ ice.image_url }}" class="img-fluid rounded" alt="{{ ice.name }}">
+        {% else %}
+            <img src="https://via.placeholder.com/500x400/007bff/ffffff?text={{ ice.name }}" class="img-fluid rounded" alt="{{ ice.name }}">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ ice.name }}</h1>
+        <p class="lead">{{ ice.description }}</p>
+        <p><strong>Category:</strong> {{ ice.category|title }}</p>
+        <p><strong>Price:</strong> ${{ "%.2f"|format(ice.price_per_unit) }} per {{ ice.unit }}</p>
+        <p><strong>In Stock:</strong> {{ ice.in_stock }}</p>
+
+        {% if current_user.is_authenticated %}
+            <form method="post" action="{{ url_for('user.cart_add', ice_type_id=ice._id) }}" class="mt-4">
+              {{ add_to_cart_form.hidden_tag() }}
+              {{ add_to_cart_form.quantity(min=1) }}
+              {{ add_to_cart_form.submit() }}
+            </form>
+        {% else %}
+            <p class="mt-4"><a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login to Add to Cart</a></p>
+        {% endif %}
+
+        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            <div class="mt-4">
+                <a href="{{ url_for('admin.ice_edit', ice_type_id=ice._id) }}" class="btn btn-warning">Edit</a>
+                <form method="POST" action="{{ url_for('admin.ice_toggle', ice_type_id=ice._id) }}" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn btn-secondary">
+                        {% if ice.is_active %}Deactivate{% else %}Activate{% endif %}
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

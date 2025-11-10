@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<h2>Welcome back, {{ current_user.name }}!</h2>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Orders</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td>{{ order._id }}</td>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ {'pending': 'warning', 'confirmed': 'info', 'shipped': 'primary', 'delivered': 'success', 'cancelled': 'danger'}[order.status] }}">
+                                            {{ order.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>${{ "%.2f"|format(order.grand_total) }}</td>
+                                    <td>
+                                        <a href="{{ url_for('user.order_detail', order_id=order._id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ url_for('user.orders') }}" class="btn btn-primary">View All Orders</a>
+                {% else %}
+                    <p>You haven't placed any orders yet.</p>
+                    <a href="{{ url_for('shop.ice_list') }}" class="btn btn-primary">Start Shopping</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('user.cart') }}" class="btn btn-success w-100 mb-2">
+                    <i class="fas fa-shopping-cart"></i> View Cart
+                </a>
+                <a href="{{ url_for('user.profile') }}" class="btn btn-outline-primary w-100 mb-2">
+                    <i class="fas fa-user"></i> Update Profile
+                </a>
+                <a href="{{ url_for('shop.ice_list') }}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-snowflake"></i> Browse Products
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

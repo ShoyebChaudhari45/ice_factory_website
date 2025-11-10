@@ -1,0 +1,85 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Sales</h5>
+                <h3>${{ "%.2f"|format(stats.total_revenue) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <h3>{{ stats.total_orders }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Low Stock Items</h5>
+                <h3>{{ stats.low_stock_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Active Products</h5>
+                <h3>{{ stats.active_products }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Low Stock Alert</h5>
+            </div>
+            <div class="card-body">
+                {% if low_stock_items %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in low_stock_items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.name }}
+                            <span class="badge bg-warning rounded-pill">{{ item.in_stock }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>All items are well stocked!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Top Selling Products</h5>
+            </div>
+            <div class="card-body">
+                {% if top_products %}
+                    <ul class="list-group list-group-flush">
+                        {% for product in top_products %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ product.name }}
+                            <span class="badge bg-success rounded-pill">{{ product.total_sold }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No sales data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

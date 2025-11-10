@@ -1,0 +1,87 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block content %}
+<h2>Reports</h2>
+
+<!-- Date Range Form -->
+<form method="POST" class="mb-4">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label for="date_from" class="form-label">From Date</label>
+            <input type="date" id="date_from" name="date_from" class="form-control" value="{{ date_from }}" required>
+        </div>
+        <div class="col-md-4">
+            <label for="date_to" class="form-label">To Date</label>
+            <input type="date" id="date_to" name="date_to" class="form-control" value="{{ date_to }}" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+        </div>
+    </div>
+</form>
+
+{% if report_data %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <h3>${{ "%.2f"|format(report_data.total_revenue) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <h3>{{ report_data.total_orders }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Average Order Value</h5>
+                <h3>${{ "%.2f"|format(report_data.avg_order_value) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Top Selling Products</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Units Sold</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in report_data.top_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.units_sold }}</td>
+                        <td>${{ "%.2f"|format(product.revenue) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="text-end">
+    <a href="{{ url_for('admin.download_report', date_from=date_from, date_to=date_to) }}" class="btn btn-success">
+        <i class="fas fa-download"></i> Download CSV
+    </a>
+</div>
+{% endif %}
+{% endblock %}
