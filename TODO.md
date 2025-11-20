@@ -1,63 +1,46 @@
-# Dipak Ice Factory Inventory Management System - TODO List
+# TODO: Add Online Payment Workflow and UI Improvements
 
-## Core Application Files
-- [ ] Create app.py (main Flask app)
-- [ ] Create config.py (app settings)
-- [ ] Create requirements.txt (dependencies)
-- [ ] Create .env.example (environment variables template)
-- [ ] Create seed.py (database seeding script)
+## Phase 1: Database and Config Updates
+- [ ] Update config.py to add UPLOAD_FOLDER, ALLOWED_EXTENSIONS, MAX_CONTENT_LENGTH
+- [ ] Update requirements.txt to add Flask-WTF file validators (FileAllowed, FileSize)
+- [ ] Create models/settings_service.py for managing site settings (QR code URL)
+- [ ] Update OrderService to handle new payment fields (payment_method, payment_status, payment_screenshot_url, etc.)
+- [ ] Update seed.py to add initial QR code setting
 
-## Extensions Setup
-- [ ] Create /extensions/ directory
-- [ ] Implement login_manager extension
-- [ ] Implement mongo client extension
-- [ ] Implement csrf extension
+## Phase 2: Forms and Validation
+- [ ] Update CheckoutForm in blueprints/user/forms.py to include payment_method, confirm_payment, payment_screenshot
+- [ ] Add PaymentQRForm in blueprints/admin/forms.py for QR upload
+- [ ] Add PaymentVerifyForm in blueprints/admin/forms.py for admin verification
 
-## Models/Services
-- [ ] Create /models/ directory
-- [ ] Implement user service/repository
-- [ ] Implement ice_types service/repository
-- [ ] Implement orders service/repository
-- [ ] Implement audit_logs service/repository (optional)
+## Phase 3: Backend Routes
+- [ ] Update checkout route in blueprints/user/routes.py to handle payment logic
+- [ ] Add /api/upload_screenshot route for AJAX screenshot upload
+- [ ] Add admin routes for QR management (/admin/payment-qr)
+- [ ] Add admin routes for payment verification (/admin/orders/<id>/payment)
+- [ ] Update order creation to include payment fields
 
-## Blueprints
-- [ ] Create /blueprints/ directory
-- [ ] Implement auth blueprint (routes.py, forms.py)
-- [ ] Implement shop blueprint (routes.py)
-- [ ] Implement user blueprint (routes.py, forms.py)
-- [ ] Implement admin blueprint (routes.py, forms.py)
+## Phase 4: Templates and UI
+- [ ] Create templates/user/checkout.html with Tailwind, payment options, QR display
+- [ ] Update templates/layouts/base.html to use Tailwind CDN instead of Bootstrap
+- [ ] Update templates/layouts/admin_base.html to use Tailwind
+- [ ] Update templates/admin/orders_list.html to show payment status
+- [ ] Update templates/admin/order_detail.html to show payment info and verification
+- [ ] Update templates/user/order_detail.html to show payment status
+- [ ] Add modal for screenshot preview
 
-## Templates
-- [ ] Create /templates/ directory
-- [ ] Create /templates/layouts/ (base.html, admin_base.html)
-- [ ] Create /templates/auth/ (login.html, register.html)
-- [ ] Create /templates/shop/ (home.html, ice_list.html, ice_detail.html)
-- [ ] Create /templates/user/ (dashboard.html, cart.html, checkout.html, orders.html, order_detail.html, profile.html)
-- [ ] Create /templates/admin/ (dashboard.html, ice_list.html, ice_form.html, orders_list.html, order_detail.html, users_list.html, reports.html)
-- [ ] Create /templates/errors/ (403.html, 404.html, 500.html)
+## Phase 5: File Handling
+- [ ] Create static/uploads/ directory
+- [ ] Add file upload utilities (secure_filename, unique naming)
+- [ ] Add cloud storage support (optional, configurable)
 
-## Static Assets
-- [ ] Create /static/ directory
-- [ ] Add basic CSS/JS files
+## Phase 6: Testing
+- [ ] Add unit tests for OrderService payment methods
+- [ ] Add integration tests for checkout flow
+- [ ] Add tests for file upload validation
+- [ ] Add tests for admin verification
 
-## Implementation Details
-- [ ] Implement authentication and authorization
-- [ ] Implement role-based access control
-- [ ] Implement CSRF protection on forms
-- [ ] Implement password hashing
-- [ ] Implement session management
-- [ ] Implement DB operations for all entities
-- [ ] Implement validation and error handling
-- [ ] Implement pagination and search/filter
-- [ ] Implement cart functionality
-- [ ] Implement order processing
-- [ ] Implement admin CRUD operations
-- [ ] Implement reports and CSV export
-- [ ] Implement audit logging (optional)
-
-## Testing and Deployment
-- [ ] Install dependencies
-- [ ] Configure environment (.env)
-- [ ] Seed database
-- [ ] Run and test the application
-- [ ] Add unit tests (optional)
+## Phase 7: Final Touches
+- [ ] Update all templates to responsive Tailwind design
+- [ ] Add toast notifications for success/error
+- [ ] Ensure CSRF protection on all forms
+- [ ] Test backwards compatibility

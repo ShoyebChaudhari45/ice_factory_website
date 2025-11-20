@@ -55,8 +55,9 @@
         <div class="col-md-6">
             <a href="{{ url_for('shop.ice_list') }}" class="btn btn-outline-primary">Continue Shopping</a>
         </div>
+
         <div class="col-md-6 text-end">
-            <form method="POST">
+            <form method="POST" id="orderForm">
                 {{ form.hidden_tag() }}
                 <div class="mb-3">
                     {{ form.shipping_address.label(class="form-label") }}
@@ -67,10 +68,12 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                {{ form.submit(class="btn btn-success") }}
+
+                {{ form.submit(class="btn btn-success", id="placeOrderBtn") }}
             </form>
         </div>
     </div>
+
 {% else %}
     <div class="text-center mt-5">
         <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
@@ -79,4 +82,74 @@
         <a href="{{ url_for('shop.ice_list') }}" class="btn btn-primary">Browse Products</a>
     </div>
 {% endif %}
+
+<!-- ======================= PAYMENT SIMULATION MODAL ======================= -->
+<div class="modal" id="paymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+
+      <h4 class="mb-2">Scan to Pay</h4>
+      <p class="text-muted">Simulated Payment (6 seconds)</p>
+
+      <img src="{{ url_for('static', filename='qr.png') }}"
+           alt="QR Code"
+           style="width:220px; height:220px; margin:auto;" />
+
+      <div class="progress mt-4">
+        <div id="paymentProgress"
+             class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+             role="progressbar"
+             style="width: 0%">
+        </div>
+      </div>
+
+      <p id="paymentStatus" class="mt-3 text-primary fw-bold">
+        Waiting for payment...
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= PAYMENT SIMULATION SCRIPT ======================= -->
+<script>
+document.getElementById("placeOrderBtn").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const modalElement = document.getElementById('paymentModal');
+    const modal = new bootstrap.Modal(modalElement, { backdrop: 'static' });
+
+    modal.show();
+
+    let progressBar = document.getElementById("paymentProgress");
+    let status = document.getElementById("paymentStatus");
+    let seconds = 0;
+
+    let interval = setInterval(() => {
+        seconds++;
+        progressBar.style.width = (seconds / 6) * 100 + "%";
+
+        if (seconds >= 6) {
+            clearInterval(interval);
+
+            status.textContent = "Payment Successful!";
+            status.classList.remove("text-primary");
+            status.classList.add("text-success");
+
+            setTimeout(() => {
+
+                const activeModal = bootstrap.Modal.getInstance(modalElement);
+                if (activeModal) {
+                    activeModal.hide();
+                }
+
+                setTimeout(() => {
+                    document.getElementById("orderForm").requestSubmit();
+                }, 200);
+
+            }, 1000);
+        }
+    }, 1000);
+});
+</script>
+
 {% endblock %}
