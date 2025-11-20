@@ -1,85 +1,140 @@
 {% extends "layouts/admin_base.html" %}
 
 {% block content %}
-<h2>Admin Dashboard</h2>
 
-<div class="row mb-4">
+<style>
+    .dashboard-card {
+        border: none;
+        border-radius: 18px;
+        padding: 22px;
+        background: linear-gradient(145deg, #ffffff, #f0f6ff);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: 0.3s ease;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .dashboard-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #4A4A4A;
+    }
+    .dashboard-value {
+        font-size: 32px;
+        font-weight: 700;
+        margin-top: 10px;
+        color: #003B73; /* Ice blue dark tone */
+    }
+
+    .section-card {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    .section-card-header {
+        background: #e9f3ff;
+        padding: 15px 20px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #003B73;
+    }
+
+    .list-group-item {
+        border: none !important;
+        padding: 14px 18px;
+        font-size: 15px;
+        background: #f8fbff;
+        margin-bottom: 6px;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+</style>
+
+<h2 class="mb-4 fw-bold" style="color:#003B73;">Admin Dashboard</h2>
+
+<!-- ======= STAT CARDS ======= -->
+<div class="row g-4 mb-4">
+
     <div class="col-md-3">
-        <div class="card text-white bg-primary">
-            <div class="card-body">
-                <h5 class="card-title">Total Sales</h5>
-                <h3>₹{{ "%.2f"|format(stats.total_revenue) }}</h3>
-            </div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">Total Sales</div>
+            <div class="dashboard-value">₹{{ "%.2f"|format(stats.total_revenue) }}</div>
         </div>
     </div>
+
     <div class="col-md-3">
-        <div class="card text-white bg-success">
-            <div class="card-body">
-                <h5 class="card-title">Total Orders</h5>
-                <h3>{{ stats.total_orders }}</h3>
-            </div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">Total Orders</div>
+            <div class="dashboard-value">{{ stats.total_orders }}</div>
         </div>
     </div>
+
     <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5 class="card-title">Low Stock Items</h5>
-                <h3>{{ stats.low_stock_count }}</h3>
-            </div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">Low Stock Items</div>
+            <div class="dashboard-value">{{ stats.low_stock_count }}</div>
         </div>
     </div>
+
     <div class="col-md-3">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title">Active Products</h5>
-                <h3>{{ stats.active_products }}</h3>
-            </div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">Active Products</div>
+            <div class="dashboard-value">{{ stats.active_products }}</div>
         </div>
     </div>
+
 </div>
 
-<div class="row">
+<!-- ======= LOW STOCK + TOP SELLING ======= -->
+<div class="row g-4">
+
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5>Low Stock Alert</h5>
-            </div>
+        <div class="section-card">
+            <div class="section-card-header">Low Stock Alert</div>
             <div class="card-body">
                 {% if low_stock_items %}
                     <ul class="list-group list-group-flush">
                         {% for item in low_stock_items %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ item.name }}
-                            <span class="badge bg-warning rounded-pill">{{ item.in_stock }}</span>
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                {{ item.in_stock }}
+                            </span>
                         </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>All items are well stocked!</p>
+                    <p class="text-muted">All items are well stocked!</p>
                 {% endif %}
             </div>
         </div>
     </div>
+
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5>Top Selling Products</h5>
-            </div>
+        <div class="section-card">
+            <div class="section-card-header">Top Selling Products</div>
             <div class="card-body">
                 {% if top_products %}
                     <ul class="list-group list-group-flush">
                         {% for product in top_products %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ product.name }}
-                            <span class="badge bg-success rounded-pill">{{ product.total_sold }}</span>
+                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                {{ product.total_sold }}
+                            </span>
                         </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No sales data available.</p>
+                    <p class="text-muted">No sales data available.</p>
                 {% endif %}
             </div>
         </div>
     </div>
+
 </div>
+
 {% endblock %}

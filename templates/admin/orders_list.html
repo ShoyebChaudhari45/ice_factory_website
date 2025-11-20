@@ -1,35 +1,126 @@
 {% extends "layouts/admin_base.html" %}
 
 {% block content %}
-<h2>Orders Management</h2>
 
-<!-- Filter Form -->
-<form method="GET" class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-3">
-            <select name="status" class="form-select">
-                <option value="">All Statuses</option>
-                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
-                <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>Shipped</option>
-                <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
-                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
-        </div>
-        <div class="col-md-3">
-            <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
-        </div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
-        </div>
-    </div>
-</form>
+<style>
+    .page-title {
+        color: #003B73;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
 
-<div class="table-responsive">
-    <table class="table table-striped">
+    .filter-card {
+        background: linear-gradient(145deg, #ffffff, #f0f6ff);
+        padding: 18px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .form-select, .form-control {
+        border-radius: 10px;
+        padding: 10px;
+        border: 1px solid #d4e3f7;
+        background: #fafcff;
+    }
+
+    .form-select:focus, .form-control:focus {
+        border-color: #7BB7F3;
+        box-shadow: 0 0 4px rgba(0,123,255,0.25);
+    }
+
+    .btn-outline-primary {
+        border-radius: 10px;
+        padding: 10px;
+        border-width: 1.5px;
+    }
+
+    .frost-table {
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .frost-table thead {
+        background: #e9f3ff;
+        color: #003B73;
+        font-weight: 600;
+    }
+
+    .frost-table th, .frost-table td {
+        padding: 15px;
+        vertical-align: middle !important;
+    }
+
+    .badge {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
+    .btn-sm {
+        border-radius: 8px;
+        padding: 5px 9px;
+    }
+
+    .form-select-sm {
+        border-radius: 8px;
+        padding: 4px 8px;
+    }
+
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 4px;
+        color: #003B73;
+        padding: 8px 14px;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #0074D9;
+        border-color: #0074D9;
+        color: white;
+    }
+</style>
+
+<!-- ====================== PAGE TITLE ====================== -->
+<h2 class="page-title">Orders Management</h2>
+
+<!-- ====================== FILTER SECTION ====================== -->
+<div class="filter-card">
+    <form method="GET">
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+            </div>
+
+            <div class="col-md-3">
+                <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary w-100">Apply Filters</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- ====================== ORDERS TABLE ====================== -->
+<div class="table-responsive frost-table">
+    <table class="table mb-0">
         <thead>
             <tr>
                 <th>Order ID</th>
@@ -37,40 +128,67 @@
                 <th>Date</th>
                 <th>Status</th>
                 <th>Total</th>
-                <th>Actions</th>
+                <th class="text-end">Actions</th>
             </tr>
         </thead>
+
         <tbody>
             {% for order in orders %}
             <tr>
                 <td>{{ order._id }}</td>
                 <td>{{ order.customer_name }}</td>
                 <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+
                 <td>
-                    <span class="badge bg-{{ {'pending': 'warning', 'confirmed': 'info', 'shipped': 'primary', 'delivered': 'success', 'cancelled': 'danger'}[order.status] }}">
+                    <span class="badge bg-{{ {
+                        'pending': 'warning',
+                        'confirmed': 'info',
+                        'shipped': 'primary',
+                        'delivered': 'success',
+                        'cancelled': 'danger'
+                    }[order.status] }}">
                         {{ order.status|title }}
                     </span>
                 </td>
+
                 <td>₹{{ "%.2f"|format(order.grand_total) }}</td>
-                <td>
-                    <a href="{{ url_for('admin.order_detail', order_id=order._id) }}" class="btn btn-sm btn-outline-primary">View</a>
+
+                <td class="text-end">
+
+                    <a href="{{ url_for('admin.order_detail', order_id=order._id) }}"
+                       class="btn btn-sm btn-outline-primary">
+                        View
+                    </a>
+
                     {% if order.status != 'cancelled' and order.status != 'delivered' %}
-                        <form method="POST" action="{{ url_for('admin.order_detail', order_id=order._id) }}" class="d-inline">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                            <select name="status" class="form-select form-select-sm d-inline w-auto me-1">
-                                {% if order.status == 'pending' %}
-                                    <option value="confirmed">Confirm</option>
-                                    <option value="cancelled">Cancel</option>
-                                {% elif order.status == 'confirmed' %}
-                                    <option value="shipped">Ship</option>
-                                    <option value="cancelled">Cancel</option>
-                                {% elif order.status == 'shipped' %}
-                                    <option value="delivered">Deliver</option>
-                                {% endif %}
-                            </select>
-                            <button type="submit" class="btn btn-sm btn-outline-success">Update</button>
-                        </form>
+                    <form method="POST"
+                          action="{{ url_for('admin.order_detail', order_id=order._id) }}"
+                          class="d-inline">
+
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                        <select name="status" class="form-select form-select-sm d-inline w-auto me-1">
+
+                            {% if order.status == 'pending' %}
+                                <option value="confirmed">Confirm</option>
+                                <option value="cancelled">Cancel</option>
+
+                            {% elif order.status == 'confirmed' %}
+                                <option value="shipped">Ship</option>
+                                <option value="cancelled">Cancel</option>
+
+                            {% elif order.status == 'shipped' %}
+                                <option value="delivered">Deliver</option>
+                            {% endif %}
+                        </select>
+
+                        <button type="submit" class="btn btn-sm btn-outline-success">
+                            Update
+                        </button>
+
+                    </form>
                     {% endif %}
+
                 </td>
             </tr>
             {% endfor %}
@@ -78,17 +196,24 @@
     </table>
 </div>
 
-<!-- Pagination -->
+<!-- ====================== PAGINATION ====================== -->
 {% if total > 10 %}
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" class="mt-4">
     <ul class="pagination justify-content-center">
+
         {% set total_pages = (total + 9) // 10 %}
         {% for page_num in range(1, total_pages + 1) %}
-            <li class="page-item {% if page_num == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('admin.orders_list', page=page_num, status=status_filter, date_from=date_from, date_to=date_to) }}">{{ page_num }}</a>
-            </li>
+
+        <li class="page-item {% if page_num == page %}active{% endif %}">
+            <a class="page-link"
+               href="{{ url_for('admin.orders_list', page=page_num, status=status_filter, date_from=date_from, date_to=date_to) }}">
+                {{ page_num }}
+            </a>
+        </li>
+
         {% endfor %}
     </ul>
 </nav>
 {% endif %}
+
 {% endblock %}

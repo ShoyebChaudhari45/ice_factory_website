@@ -1,15 +1,67 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+
+<style>
+    .profile-title {
+        color: #003B73;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+        background: #e9f3ff;
+        padding: 14px 20px;
+        border-radius: 18px 18px 0 0 !important;
+    }
+
+    .card-header h3 {
+        margin: 0;
+        color: #003B73;
+        font-weight: 700;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #d4e3f7;
+        background: #fafcff;
+        padding: 10px 14px;
+    }
+
+    .form-control:focus {
+        border-color: #7BB7F3;
+        box-shadow: 0 0 4px rgba(0,123,255,0.25);
+    }
+
+    .btn-primary {
+        border-radius: 12px;
+        padding: 10px 16px;
+        width: 100%;
+    }
+</style>
+
+<h2 class="profile-title">My Profile</h2>
+
 <div class="row justify-content-center">
     <div class="col-md-6">
+
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title mb-0"> Profile</h3>
+                <h3 class="card-title mb-0">Profile Information</h3>
             </div>
+
             <div class="card-body">
                 <form method="POST">
                     {{ form.hidden_tag() }}
+
+                    <!-- NAME -->
                     <div class="mb-3">
                         {{ form.name.label(class="form-label") }}
                         {{ form.name(class="form-control", value=current_user.name) }}
@@ -19,17 +71,25 @@
                             {% endfor %}
                         {% endif %}
                     </div>
+
+                    <!-- EMAIL (Read-only) -->
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                        <input type="email"
+                               class="form-control"
+                               value="{{ current_user.email }}"
+                               disabled>
                         <small class="text-muted">Email cannot be changed</small>
                     </div>
-                    <!-- {{ form.submit(class="btn btn-primary") }} -->
+
+                    <!-- SUBMIT BUTTON -->
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+
                 </form>
             </div>
         </div>
 
-     
     </div>
 </div>
+
 {% endblock %}

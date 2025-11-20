@@ -1,98 +1,167 @@
 {% extends "layouts/admin_base.html" %}
 
 {% block content %}
-<h2>{% if ice_type %}Edit{% else %}Add New{% endif %} Ice Type</h2>
+
+<style>
+    .page-title {
+        color: #003B73;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .frost-card {
+        border: none;
+        border-radius: 18px;
+        background: linear-gradient(145deg, #ffffff, #f0f6ff);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 25px;
+        transition: 0.3s ease;
+    }
+
+    .frost-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .input-label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #003B73;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #d4e3f7;
+        background: #fafcff;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #7BB7F3;
+        box-shadow: 0 0 5px rgba(0,123,255,0.25);
+    }
+
+    .side-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+        background-color: #0074D9;
+        border-radius: 10px;
+        padding: 12px;
+    }
+
+    .btn-primary:hover {
+        background-color: #005fb5;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 10px;
+        padding: 12px;
+    }
+</style>
+
+<h2 class="page-title">
+    {% if ice_type %} Edit Ice Type {% else %} Add New Ice Type {% endif %}
+</h2>
 
 <form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
+
     <div class="row">
+
+        <!-- ================= LEFT SIDE FORM ================= -->
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-3">
-                        {{ form.name.label(class="form-label") }}
-                        {{ form.name(class="form-control") }}
-                        {% if form.name.errors %}
-                            {% for error in form.name.errors %}
+            <div class="frost-card">
+
+                <div class="mb-3">
+                    {{ form.name.label(class="input-label") }}
+                    {{ form.name(class="form-control") }}
+                    {% for error in form.name.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.category.label(class="input-label") }}
+                    {{ form.category(class="form-select") }}
+                    {% for error in form.category.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.description.label(class="input-label") }}
+                    {{ form.description(class="form-control", rows=3) }}
+                    {% for error in form.description.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.price_per_unit.label(class="input-label") }}
+                            {{ form.price_per_unit(class="form-control") }}
+                            {% for error in form.price_per_unit.errors %}
                                 <div class="text-danger">{{ error }}</div>
                             {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.category.label(class="form-label") }}
-                        {{ form.category(class="form-select") }}
-                        {% if form.category.errors %}
-                            {% for error in form.category.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.description.label(class="form-label") }}
-                        {{ form.description(class="form-control", rows=3) }}
-                        {% if form.description.errors %}
-                            {% for error in form.description.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form.price_per_unit.label(class="form-label") }}
-                                {{ form.price_per_unit(class="form-control") }}
-                                {% if form.price_per_unit.errors %}
-                                    {% for error in form.price_per_unit.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form.unit.label(class="form-label") }}
-                                {{ form.unit(class="form-control") }}
-                                {% if form.unit.errors %}
-                                    {% for error in form.unit.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form.in_stock.label(class="form-label") }}
-                                {{ form.in_stock(class="form-control") }}
-                                {% if form.in_stock.errors %}
-                                    {% for error in form.in_stock.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        {{ form.image_url.label(class="form-label") }}
-                        {{ form.image_url(class="form-control") }}
-                        {% if form.image_url.errors %}
-                            {% for error in form.image_url.errors %}
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.unit.label(class="input-label") }}
+                            {{ form.unit(class="form-control") }}
+                            {% for error in form.unit.errors %}
                                 <div class="text-danger">{{ error }}</div>
                             {% endfor %}
-                        {% endif %}
-                        <small class="text-muted">Leave empty to use placeholder image</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.in_stock.label(class="input-label") }}
+                            {{ form.in_stock(class="form-control") }}
+                            {% for error in form.in_stock.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
+
+                <div class="mb-3">
+                    {{ form.image_url.label(class="input-label") }}
+                    {{ form.image_url(class="form-control") }}
+                    {% for error in form.image_url.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                    <small class="text-muted">Leave empty to use placeholder image</small>
+                </div>
+
             </div>
         </div>
+
+        <!-- ================= RIGHT SIDE ACTIONS ================= -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5>Actions</h5>
-                    {{ form.submit(class="btn btn-primary w-100 mb-2") }}
-                    <a href="{{ url_for('admin.ice_list') }}" class="btn btn-outline-secondary w-100">Cancel</a>
-                </div>
+            <div class="side-card">
+                <h5 class="mb-3" style="color:#003B73; font-weight:600;">Actions</h5>
+
+                {{ form.submit(class="btn btn-primary w-100 mb-3") }}
+
+                <a href="{{ url_for('admin.ice_list') }}" class="btn btn-outline-secondary w-100">
+                    Cancel
+                </a>
             </div>
         </div>
+
     </div>
 </form>
+
 {% endblock %}
