@@ -13,7 +13,7 @@
         <h1>{{ ice.name }}</h1>
         <p class="lead">{{ ice.description }}</p>
         <p><strong>Category:</strong> {{ ice.category|title }}</p>
-        <p><strong>Price:</strong> ${{ "%.2f"|format(ice.price_per_unit) }} per {{ ice.unit }}</p>
+        <p><strong>Price:</strong> ₹{{ "%.2f"|format(ice.price_per_unit) }} per {{ ice.unit }}</p>
         <p><strong>In Stock:</strong> {{ ice.in_stock }}</p>
 
         {% if current_user.is_authenticated %}

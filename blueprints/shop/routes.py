@@ -7,7 +7,7 @@ shop_bp = Blueprint('shop', __name__)
 @shop_bp.route('/')
 def home():
     featured_ice_types, _ = IceTypeService.get_active_ice_types(page=1, per_page=6)
-    return render_template('shop/home.html', title='Ice Factory - Home', featured_ice_types=featured_ice_types)
+    return render_template('shop/home.html', title='Dipak Ice Factory - Home', featured_ice_types=featured_ice_types)
 
 @shop_bp.route('/ice')
 def ice_list():

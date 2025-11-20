@@ -51,7 +51,7 @@
                         {{ order.status|title }}
                     </span>
                 </td>
-                <td>${{ "%.2f"|format(order.grand_total) }}</td>
+                <td>₹{{ "%.2f"|format(order.grand_total) }}</td>
                 <td>
                     <a href="{{ url_for('admin.order_detail', order_id=order._id) }}" class="btn btn-sm btn-outline-primary">View</a>
                     {% if order.status != 'cancelled' and order.status != 'delivered' %}

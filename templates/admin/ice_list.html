@@ -23,7 +23,7 @@
             <tr>
                 <td>{{ ice_type.name }}</td>
                 <td>{{ ice_type.category|title }}</td>
-                <td>${{ "%.2f"|format(ice_type.price_per_unit) }}</td>
+                <td>₹{{ "%.2f"|format(ice_type.price_per_unit) }}</td>
                 <td>{{ ice_type.in_stock }}</td>
                 <td>
                     <span class="badge bg-{{ 'success' if ice_type.is_active else 'secondary' }}">

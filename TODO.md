@@ -1,4 +1,4 @@
-# Ice Factory Inventory Management System - TODO List
+# Dipak Ice Factory Inventory Management System - TODO List
 
 ## Core Application Files
 - [ ] Create app.py (main Flask app)

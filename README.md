@@ -1,4 +1,4 @@
-# Ice Factory Inventory Management System
+# Dipak Ice Factory Inventory Management System
 
 A production-ready Flask web application for managing ice product inventory with user authentication, shopping cart functionality, and admin panel.
 
